@@ -53,3 +53,7 @@ variable "alias" {
   description = "The display name of the alias. The name must start with the word `alias` followed by a forward slash"
 }
 
+variable "accounts_with_access" {
+  default     = []
+  description = "Specifies the AWS account IDs that can access the key"
+}
