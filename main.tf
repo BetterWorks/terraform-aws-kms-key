@@ -36,12 +36,12 @@ data "aws_iam_policy_document" "kms_key_policy" {
     resources = ["*"]
 
     principals {
-      identifiers = [for id in var.aws_accounts : "arn:aws:iam::${id}:root"]
+      identifiers = [for id in local.aws_accounts : "arn:aws:iam::${id}:root"]
       type        = "AWS"
     }
   }
 }
 
-local {
+locals {
   aws_accounts = concat(var.accounts_with_access, [data.aws_caller_identity.current.account_id])
 }
