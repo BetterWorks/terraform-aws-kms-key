@@ -1,3 +1,4 @@
+data "aws_caller_identity" "current" {}
 module "label" {
   source     = "git::https://github.com/betterworks/terraform-null-label.git?ref=tags/0.13.0"
   namespace  = var.namespace
@@ -20,3 +21,27 @@ resource "aws_kms_alias" "default" {
   target_key_id = aws_kms_key.default.id
 }
 
+
+resource "aws_kms_key_policy" "default" {
+  key_id = aws_kms_key.default.id
+  policy = data.aws_iam_policy_document.kms_key_policy.json
+}
+
+data "aws_iam_policy_document" "kms_key_policy" {
+
+  statement {
+    sid       = "AccessibleAWSAccounts"
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
+
+    principals {
+      identifiers = [for id in local.aws_accounts : "arn:aws:iam::${id}:root"]
+      type        = "AWS"
+    }
+  }
+}
+
+locals {
+  aws_accounts = concat(var.accounts_with_access, [data.aws_caller_identity.current.account_id])
+}
