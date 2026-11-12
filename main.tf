@@ -1,3 +1,10 @@
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    aws  = "~> 5.0"
+  }
+}
+
 data "aws_caller_identity" "current" {}
 module "label" {
   source     = "git::https://github.com/betterworks/terraform-null-label.git?ref=tags/0.14.0"
