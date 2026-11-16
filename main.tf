@@ -30,13 +30,13 @@ resource "aws_kms_alias" "default" {
 
 
 resource "aws_kms_key_policy" "default" {
-  count  = local.aws_accounts ? 1 : 0
+  count  = var.create_key_policy ? 1 : 0
   key_id = aws_kms_key.default.id
-  policy = data.aws_iam_policy_document.kms_key_policy.json
+  policy = data.aws_iam_policy_document.kms_key_policy[0].json
 }
 
 data "aws_iam_policy_document" "kms_key_policy" {
-
+  count  = var.create_key_policy ? 1 : 0
   statement {
     sid       = "AccessibleAWSAccounts"
     effect    = "Allow"
