@@ -57,3 +57,8 @@ variable "accounts_with_access" {
   default     = []
   description = "Specifies the AWS account IDs that can access the key"
 }
+
+variable "create_key_policy" {
+  default     = "false"
+  description = "Set to false to prevent the module from creating a key policy"
+}

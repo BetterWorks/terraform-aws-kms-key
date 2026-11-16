@@ -1,6 +1,13 @@
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    aws  = "~> 5.0"
+  }
+}
+
 data "aws_caller_identity" "current" {}
 module "label" {
-  source     = "git::https://github.com/betterworks/terraform-null-label.git?ref=tags/0.13.0"
+  source     = "git::https://github.com/betterworks/terraform-null-label.git?ref=tags/0.14.0"
   namespace  = var.namespace
   stage      = var.stage
   name       = var.name
@@ -23,12 +30,13 @@ resource "aws_kms_alias" "default" {
 
 
 resource "aws_kms_key_policy" "default" {
+  count  = var.create_key_policy ? 1 : 0
   key_id = aws_kms_key.default.id
-  policy = data.aws_iam_policy_document.kms_key_policy.json
+  policy = data.aws_iam_policy_document.kms_key_policy[0].json
 }
 
 data "aws_iam_policy_document" "kms_key_policy" {
-
+  count  = var.create_key_policy ? 1 : 0
   statement {
     sid       = "AccessibleAWSAccounts"
     effect    = "Allow"
