@@ -30,6 +30,7 @@ resource "aws_kms_alias" "default" {
 
 
 resource "aws_kms_key_policy" "default" {
+  count  = local.aws_accounts ? 1 : 0
   key_id = aws_kms_key.default.id
   policy = data.aws_iam_policy_document.kms_key_policy.json
 }
